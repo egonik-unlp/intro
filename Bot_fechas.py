@@ -23,7 +23,7 @@ def parser(dates):
     def dec_fechas(func):
         format_fechas = lambda x: datetime.strptime(x, "%d/%m/%Y")
         fechas = {k:format_fechas(fecha) for k, fecha in dates.items()}
-        def wrapper_dec(*args, **kwargs):
+        def wrapper_dec():
             content = func(fechas)
             return tuple([(f'{k} ->{v}''\n') for k,v in content.items()])
         return wrapper_dec
@@ -32,9 +32,12 @@ def parser(dates):
 @parser(dates)
 def fecha(fechas):
     return {k:datetime.strftime(v, "%d/%m/%Y") for k,v in fechas.items()}
+
+
+
 @parser(dates)
 def cuanto_falta(fechas):
-    return {k: f' faltan {(datetime.now() - v).days} dias' for k,v in fechas.items()}
+    return {k: f' faltan {(v - datetime.now()).days} dias' for k,v in fechas.items()}
 
 
 
