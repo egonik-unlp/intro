@@ -37,3 +37,17 @@ def fecha(fechas):
 @parser(dates)
 def cuanto_falta(fechas):
     return {k: f' faltan {(datetime.now() - v).days} dias' for k,v in fechas.items()}
+
+
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    
+    if message.content == 'fecha!':
+        response = fecha()
+        await message.channel.send(response)
+    if message.content == 'cuanto!':
+        response = cuanto_falta()
+        await message.channel.send(response)
