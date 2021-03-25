@@ -25,7 +25,7 @@ def parser(dates):
         fechas = {k:format_fechas(fecha) for k, fecha in dates.items()}
         def wrapper_dec(*args, **kwargs):
             content = func(fechas)
-            return [(f'{k} ->{v}''\n') for k,v in content.items()]
+            return tuple([(f'{k} ->{v}''\n') for k,v in content.items()])
         return wrapper_dec
     return dec_fechas
 
