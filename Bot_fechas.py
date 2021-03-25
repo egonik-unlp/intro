@@ -23,11 +23,9 @@ def parser(dates):
     def dec_fechas(func):
         format_fechas = lambda x: datetime.strptime(x, "%d/%m/%Y")
         fechas = {k:format_fechas(fecha) for k, fecha in dates.items()}
-        print(fechas)
         def wrapper_dec(*args, **kwargs):
             content = func(fechas)
-            for k,v in content.items():
-                print(f'{k} ->{v}''\n')
+            return [(f'{k} ->{v}''\n') for k,v in content.items()]
         return wrapper_dec
     return dec_fechas
 
