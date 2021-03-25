@@ -1,5 +1,5 @@
 import os 
-import discord 
+import discord
 from dotenv import load_dotenv
 import requests
 from datetime import datetime
@@ -7,14 +7,13 @@ from datetime import datetime
 JSON_URL = 'https://raw.githubusercontent.com/egonik-unlp/intro_bot/main/prueba.json'
 
 load_dotenv()
-TOKEN = os.getenv("DISCORD_TOKEN")
+TOKEN = os.getenv("DISCORD_TOKEN2")
+GUILD = os.getenv('DISCORD_GUILD')
 client = discord.Client()
 
 @client.event
 async def on_ready():
     print(f"{client.user} has connected to Discord!")
-
-client.run(TOKEN)
 
 dates = requests.get(JSON_URL).json()
 
@@ -25,7 +24,7 @@ def parser(dates):
         fechas = {k:format_fechas(fecha) for k, fecha in dates.items()}
         def wrapper_dec():
             content = func(fechas)
-            return tuple([(f'{k} ->{v}''\n') for k,v in content.items()])
+            return tuple([(f'{k} ->{v}') for k,v in content.items()])
         return wrapper_dec
     return dec_fechas
 
@@ -48,7 +47,10 @@ async def on_message(message):
     
     if message.content == 'fecha!':
         response = fecha()
-        await message.channel.send(response)
+        await message.channel.send('\n'.join(response))
     if message.content == 'cuanto!':
         response = cuanto_falta()
-        await message.channel.send(response)
+        await message.channel.send('\n'.join(response))
+
+
+client.run(TOKEN)
