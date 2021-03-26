@@ -24,33 +24,36 @@ async def on_ready():
     print(f"{client.user} has connected to Discord!")
 
 def logger(counter):
-    @wraps
     def logger_wrapper(func):
+        @wraps(func)
         def counter_wrapper(*args, **kwargs):
-            func()
+            
+            print('esta a punto de ejecutarse la func')
+            response = func(*args, **kwargs)
             counter[func.__name__] += 1
             with open('counter.json', 'w') as file:
                 json.dump(counter, file)
+            return response
         return counter_wrapper
     return logger_wrapper
     
 
 
 def parser(func):
-    @wraps
-    def dec_fechas(func):
-        content = func(fechas)
-        return tuple([(f'{k} ->{v}') for k,v in content.items()])
+    @wraps(func)
+    def dec_fechas(*args, **kwargs):
+        content = func(*args, **kwargs)
+        return tuple([(f'{k} -> {v}') for k,v in content.items()])
     return dec_fechas
 
 @logger(counter)
-@parser(dates)
+@parser
 def fecha(fechas):
     return {k:datetime.strftime(v, "%d/%m/%Y") for k,v in fechas.items()}
 
 
-
-@parser(dates)
+@logger(counter)
+@parser
 def cuanto_falta(fechas):
     return {k: f' faltan {(v - datetime.now()).days} dias' for k,v in fechas.items() if (v - datetime.now()).days > 0 }
 
@@ -62,10 +65,11 @@ async def on_message(message):
         return
     
     if message.content == 'fecha!':
-        response = fecha()
+        response = fecha(dates)
+        print(f'tipo -> {type(response)}')
         await message.channel.send('\n'.join(response))
     if message.content == 'cuanto!':
-        response = cuanto_falta()
+        response = cuanto_falta(dates)
         await message.channel.send('\n'.join(response))
 
 
