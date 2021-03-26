@@ -33,7 +33,7 @@ def logger(counter):
             counter[func.__name__] += 1
             with open('counter.json', 'w') as file:
                 json.dump(counter, file)
-            return response
+        return response
         return counter_wrapper
     return logger_wrapper
     
