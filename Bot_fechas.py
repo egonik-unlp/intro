@@ -6,6 +6,7 @@ from collections import Counter
 import requests
 from functools import wraps 
 from datetime import datetime
+import msgpack
 
 JSON_URL = 'https://raw.githubusercontent.com/egonik-unlp/intro_bot/main/prueba.json'
 
@@ -19,6 +20,7 @@ dates_aux = requests.get(JSON_URL).json()
 format_fechas = lambda x: datetime.strptime(x, "%d/%m/%Y")
 dates = {k:format_fechas(v) for k,v in dates_aux.items()}
 
+
 @client.event
 async def on_ready():
     print(f"{client.user} has connected to Discord!")
@@ -27,13 +29,10 @@ def logger(counter):
     def logger_wrapper(func):
         @wraps(func)
         def counter_wrapper(*args, **kwargs):
-            
-            print('esta a punto de ejecutarse la func')
-            response = func(*args, **kwargs)
             counter[func.__name__] += 1
             with open('counter.json', 'w') as file:
                 json.dump(counter, file)
-        return response
+            return func(*args, **kwargs)
         return counter_wrapper
     return logger_wrapper
     
@@ -58,7 +57,6 @@ def cuanto_falta(fechas):
     return {k: f' faltan {(v - datetime.now()).days} dias' for k,v in fechas.items() if (v - datetime.now()).days > 0 }
 
 
-
 @client.event
 async def on_message(message):
     if message.author == client.user:
@@ -66,7 +64,6 @@ async def on_message(message):
     
     if message.content == 'fecha!':
         response = fecha(dates)
-        print(f'tipo -> {type(response)}')
         await message.channel.send('\n'.join(response))
     if message.content == 'cuanto!':
         response = cuanto_falta(dates)
