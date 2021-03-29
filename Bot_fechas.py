@@ -14,7 +14,13 @@ load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN2")
 GUILD = os.getenv('DISCORD_GUILD')
 client = discord.Client()
+
 counter = Counter()
+try:
+    with open('counter.json', 'r') as file:
+        counter.update(json.load(file))
+except Exception:
+    pass
 
 dates_aux = requests.get(JSON_URL).json()
 format_fechas = lambda x: datetime.strptime(x, "%d/%m/%Y")
