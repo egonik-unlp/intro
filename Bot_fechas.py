@@ -70,42 +70,22 @@ Help = requests.get(JSON_HELP).json() #va con mayus para que no tome la función
 # cond = requests.get(JSON_COND).json()
 #Printeo lista json de unidades, super senicllo. Hay que llenar el json y pero es bastante straightforward
 
-
+@logger(counter)
+@parser
 def get_quote():
   quote = unidades
   return(quote)
 
-
 #Placeholder para f(x) con lista de compuesto/nombre: Tengo que armar todo (ej compuesto! O2: rta oxigeno)
+@logger(counter)
+@parser
 def get_quote2():
   quote2 = compuestos
   return(quote2)
 
 #simple help function 
-def get_help():
-#hay que armar un json con toda la lista de comandos, etc y contacto
-    quote3 = Help 
-    return(quote3)
-
-# def get_cond():
-#     quote4 = cond 
-#     return(quote4)
-
-
-
-
-#Printeo lista json de unidades, super senicllo. Hay que llenar el json y pero es bastante straightforward
-def get_quote():
-  quote = unidades
-  return(quote)
-
-
-#Placeholder para f(x) con lista de compuesto/nombre: Tengo que armar todo (ej compuesto! O2: rta oxigeno)
-def get_quote2():
-  quote2 = compuestos
-  return(quote2)
-
-#simple help function 
+@logger(counter)
+@parser
 def get_help():
 #hay que armar un json con toda la lista de comandos, etc y contacto
     quote3 = Help 
@@ -128,7 +108,7 @@ def fecha(fechas):
 @parser
 def cuanto_falta(fechas):
     return {k: f' faltan {(v - datetime.now()).days} dias' for k,v in fechas.items() if (v - datetime.now()).days > 0 }
-
+#Tendíamos que hacer un lower() por si mandan mayus en cualquier lado? 
 @client.event
 async def on_message(message):
     if message.author == client.user:
