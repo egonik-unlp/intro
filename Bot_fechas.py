@@ -8,6 +8,7 @@ from functools import wraps
 from datetime import datetime
 import json
 import random 
+import re
 
 JSON_URL = 'https://raw.githubusercontent.com/egonik-unlp/intro_bot/main/prueba.json'
 JSON_UND = 'https://raw.githubusercontent.com/egonik-unlp/intro_bot/main/unidades.json'
@@ -76,12 +77,12 @@ def get_quote():
   quote = unidades
   return(quote)
 
-#Placeholder para f(x) con lista de compuesto/nombre: Tengo que armar todo (ej compuesto! O2: rta oxigeno)
+#Funcion oara buscar nombres con el comp qco
 @logger(counter)
-@parser
-def get_quote2():
-  quote2 = compuestos
-  return(quote2)
+# @parser
+def get_quote2(a_buscar):
+  quote2 = compuestos #esta línea es redundante
+  return(list(filter(lambda x:x["Molecule"]==a_buscar,quote2)))
 
 #simple help function 
 @logger(counter)
@@ -127,7 +128,8 @@ async def on_message(message):
         quote = get_quote()
         await message.channel.send(quote)
     if message.content.startswith('compuesto!'):
-        quote = get_quote2()
+        a_buscar= message.content.partition("compuesto! ")[-1]
+        quote = get_quote2(a_buscar)
         await message.channel.send(quote)
 
 
