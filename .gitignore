@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+# Personalized
+
+counter.json
+.prueba_decs.py.swp
